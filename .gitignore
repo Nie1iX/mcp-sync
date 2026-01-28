@@ -39,8 +39,3 @@ Thumbs.db
 *.tmp
 *.temp
 *.log
-
-# Claude Code specific
-CLAUDE.md
-.claude/
-.serena
