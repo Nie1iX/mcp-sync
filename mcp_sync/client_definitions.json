@@ -22,10 +22,21 @@
         "remove_mcp": "claude mcp remove --scope {scope} {name}"
       },
       "fallback_paths": {
-        "darwin": "~/.claude/settings.json",
-        "windows": "~/.claude/settings.json",
-        "linux": "~/.claude/settings.json"
+        "darwin": "~/.claude.json",
+        "windows": "%USERPROFILE%/.claude.json",
+        "linux": "~/.claude.json"
       }
+    },
+    "codex": {
+      "name": "Codex",
+      "description": "OpenAI Codex CLI",
+      "paths": {
+        "darwin": "~/.codex/config.toml",
+        "windows": "%USERPROFILE%/.codex/config.toml",
+        "linux": "~/.codex/config.toml"
+      },
+      "config_format": "toml",
+      "mcp_key": "mcp_servers"
     },
     "cline": {
       "name": "Cline",
@@ -50,12 +61,12 @@
       "mcp_key": "mcpServers"
     },
     "vscode-user": {
-      "name": "VS Code User Settings",
-      "description": "VS Code global user settings",
+      "name": "Visual Studio Code",
+      "description": "VS Code MCP settings",
       "paths": {
-        "darwin": "~/Library/Application Support/Code/User/settings.json",
-        "windows": "%APPDATA%/Code/User/settings.json",
-        "linux": "~/.config/Code/User/settings.json"
+        "darwin": "~/.vscode/mcp.json",
+        "windows": "%APPDATA%/Roaming/Code/User/mcp.json",
+        "linux": "~/.vscode/mcp.json"
       },
       "config_format": "json",
       "mcp_key": "mcpServers"
@@ -64,9 +75,53 @@
       "name": "Cursor",
       "description": "Cursor AI code editor",
       "paths": {
-        "darwin": "~/Library/Application Support/Cursor/User/settings.json",
-        "windows": "%APPDATA%/Cursor/User/settings.json",
-        "linux": "~/.config/Cursor/User/settings.json"
+        "darwin": "~/.cursor/mcp.json",
+        "windows": "%APPDATA%/Cursor/mcp.json",
+        "linux": "~/.cursor/mcp.json"
+      },
+      "config_format": "json",
+      "mcp_key": "mcpServers"
+    },
+    "gemini-cli": {
+      "name": "Gemini CLI",
+      "description": "Google Gemini CLI (gcloud) MCP settings",
+      "paths": {
+        "darwin": "~/.gemini/settings.json",
+        "windows": "%APPDATA%/.gemini/settings.json",
+        "linux": "~/.gemini/settings.json"
+      },
+      "config_format": "json",
+      "mcp_key": "mcpServers"
+    },
+    "copilot-cli": {
+      "name": "GitHub Copilot CLI",
+      "description": "GitHub Copilot CLI MCP settings",
+      "paths": {
+        "darwin": "~/.copilot/mcp-config.json",
+        "windows": "%USERPROFILE%/.copilot/mcp-config.json",
+        "linux": "~/.copilot/mcp-config.json"
+      },
+      "config_format": "json",
+      "mcp_key": "mcpServers"
+    },
+    "kilocode": {
+      "name": "Kilo Code",
+      "description": "Kilo Code VS Code extension MCP settings",
+      "paths": {
+        "darwin": "~/Library/Application Support/Code/User/globalStorage/kilocode.kilo-code/settings/mcp_settings.json",
+        "windows": "%APPDATA%/Code/User/globalStorage/kilocode.kilo-code/settings/mcp_settings.json",
+        "linux": "~/.config/Code/User/globalStorage/kilocode.kilo-code/settings/mcp_settings.json"
+      },
+      "config_format": "json",
+      "mcp_key": "mcpServers"
+    },
+    "kilocode-cli": {
+      "name": "Kilo Code CLI",
+      "description": "Kilo Code CLI MCP settings",
+      "paths": {
+        "darwin": "~/.kilocode/cli/global/settings/mcp_settings.json",
+        "windows": "%USERPROFILE%/.kilocode/cli/global/settings/mcp_settings.json",
+        "linux": "~/.kilocode/cli/global/settings/mcp_settings.json"
       },
       "config_format": "json",
       "mcp_key": "mcpServers"

@@ -13,7 +13,19 @@ def test_settings_loads_client_definitions():
     clients = client_definitions.clients
 
     # Should have at least the built-in clients
-    expected_clients = ["claude-desktop", "claude-code", "cline", "roo", "vscode-user"]
+    expected_clients = [
+        "claude-desktop",
+        "claude-code",
+        "codex",
+        "cline",
+        "roo",
+        "vscode-user",
+        "cursor",
+        "gemini-cli",
+        "copilot-cli",
+        "kilocode-cli",
+        "continue",
+    ]
     for client in expected_clients:
         assert client in clients
         assert clients[client].name
