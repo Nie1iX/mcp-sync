@@ -107,7 +107,7 @@ class Settings:
     def _save_global_config(self, config: GlobalConfig) -> None:
         """Save global configuration."""
         with open(self.global_config_file, "w") as f:
-            json.dump(config.model_dump(), f, indent=2)
+            json.dump(config.model_dump(exclude_none=True), f, indent=2)
 
     def _migrate_server_config(self, config: dict) -> dict:
         """Migrate old server config format to new format."""
