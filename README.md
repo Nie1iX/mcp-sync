@@ -18,18 +18,21 @@ Sync MCP (Model Context Protocol) configurations across AI tools.
 ## Installation
 
 ### Quick Usage (Recommended)
+
 ```bash
 uvx mcp-sync status
 uvx mcp-sync sync --dry-run
 ```
 
 ### Persistent Installation
+
 ```bash
 uv tool install mcp-sync
 mcp-sync status
 ```
 
 ### Development Install
+
 ```bash
 git clone <repo-url>
 cd mcp-sync
@@ -39,28 +42,33 @@ cd mcp-sync
 ## Quick Start
 
 1. **Scan for existing configs**:
+
    ```bash
    mcp-sync scan
    ```
 
 2. **Check current status**:
+
    ```bash
    mcp-sync status
    ```
 
 3. **Add a server to global config**:
+
    ```bash
    mcp-sync add-server filesystem
    # Follow prompts to configure
    ```
 
 4. **Preview sync changes**:
+
    ```bash
    mcp-sync diff
    mcp-sync sync --dry-run
    ```
 
 5. **Sync configurations**:
+
    ```bash
    mcp-sync sync
    ```
@@ -68,16 +76,19 @@ cd mcp-sync
 ## Commands
 
 ### Discovery & Status
+
 - `mcp-sync scan` - Auto-discover known MCP configs
 - `mcp-sync status` - Show sync status
 - `mcp-sync diff` - Show config differences
 
 ### Config Location Management
+
 - `mcp-sync add-location <path> [--name <alias>]` - Register custom config file
 - `mcp-sync remove-location <path>` - Unregister config location
 - `mcp-sync list-locations` - Show all registered config paths
 
 ### Sync Operations
+
 - `mcp-sync sync` - Sync all registered configs
 - `mcp-sync sync --dry-run` - Preview changes without applying
 - `mcp-sync sync --global-only` - Sync only global configs
@@ -85,6 +96,7 @@ cd mcp-sync
 - `mcp-sync sync --location <path>` - Sync specific location only
 
 ### Server Management
+
 - `mcp-sync add-server <name>` - Add MCP server to sync (interactive prompts)
 - `mcp-sync add-server <name> --command <cmd> --args <args> --env <vars> --scope <global|project>` - Add server with inline parameters
 - `mcp-sync remove-server <name>` - Remove server from sync (interactive prompts)
@@ -92,32 +104,38 @@ cd mcp-sync
 - `mcp-sync list-servers` - Show all managed servers
 
 ### Migration
+
 - `mcp-sync vacuum` - Import MCP servers from discovered configs
   - `--auto-resolve <first|last>` choose conflict resolution automatically
   - `--skip-existing` avoid overwriting servers already in global config
 
 **Adding Servers**: When adding a server, you need to provide:
+
 - **Command**: The executable to run (e.g., `python`, `npx`, `node`)
 - **Arguments**: Command-line arguments (comma-separated, optional)
 - **Environment**: Environment variables as `KEY=value` pairs (comma-separated, optional)
 - **Scope**: Whether to add to global config (synced everywhere) or project config (this project only)
 
 Interactive example:
+
 ```bash
 mcp-sync add-server filesystem
 # Prompts for: scope, command, args, env vars
 ```
 
 Automated example:
+
 ```bash
 mcp-sync add-server filesystem --command npx --args "-y,@modelcontextprotocol/server-filesystem,/home/user/docs" --scope global
 ```
 
 ### Project Management
+
 - `mcp-sync init` - Create project `.mcp.json`
 - `mcp-sync template` - Show template config
 
 ### Client Management
+
 - `mcp-sync list-clients` - Show all supported clients and their detection status
 - `mcp-sync client-info [client-id]` - Show detailed client information and paths
 - `mcp-sync edit-client-definitions` - Edit user client definitions to add custom clients
@@ -143,14 +161,38 @@ mcp-sync add-server filesystem --command npx --args "-y,@modelcontextprotocol/se
 
 mcp-sync uses a **configuration-driven approach** to support AI tools and editors. Client definitions are managed through JSON configuration files.
 
-**Built-in client support:**
-- **Claude Desktop** - Official Claude Desktop application
-- **Claude Code** - Claude CLI for code editing
-- **Cline** - VS Code extension for AI assistance
-- **Roo** - Roo VS Code extension for AI assistance
-- **VS Code User Settings** - VS Code global user settings
-- **Cursor** - Cursor AI code editor
-- **Continue** - Continue VS Code extension
+### Built-in Client Support
+
+| Tool | Variant | Format | Linux/macOS Path | Windows Path | Keywords | MCP Docs |
+|------|---------|--------|-----------------|--------------|----------|----------|
+| **Claude** | Desktop app | JSON | `~/Library/Application Support/Claude/claude_desktop_config.json` | `%APPDATA%/Claude/claude_desktop_config.json` | `claude-desktop`, `claude desktop`, `anthropic desktop` | [Anthropic MCP](https://docs.anthropic.com/en/docs/mcp) |
+| **Claude** | Claude Code (CLI) | JSON | `~/.claude.json` | `%USERPROFILE%/.claude.json` | `claude`, `claude-code`, `claude code`, `anthropic` | [Claude Code MCP](https://docs.anthropic.com/en/docs/claude-code/mcp) |
+| **Codex** | CLI | TOML | `~/.codex/config.toml` | `%USERPROFILE%/.codex/config.toml` | `codex`, `openai`, `codex cli` | [Codex MCP](https://developers.openai.com/codex/mcp/) |
+| **Codex** | IDE extension (shared config) | TOML | `~/.codex/config.toml` | `%USERPROFILE%/.codex/config.toml` | `codex`, `openai`, `codex cli` | [Codex MCP](https://developers.openai.com/codex/mcp/) |
+| **Cursor** | Desktop app | JSON | `~/.cursor/mcp.json` | `%APPDATA%/Cursor/mcp.json` | `cursor`, `cursor ide` | [Cursor MCP](https://docs.cursor.com/context/model-context-protocol) |
+| **VS Code** | Copilot / extensions | JSON | `~/.vscode/mcp.json` | `%APPDATA%/Roaming/Code/User/mcp.json` | `vscode`, `vs code`, `vs-code`, `code`, `visual studio code` | [VS Code MCP](https://code.visualstudio.com/api/extension-guides/ai/mcp) |
+| **Cline** | VS Code extension | JSON | `~/Library/Application Support/Code/User/globalStorage/cline_mcp_settings.json` | `%APPDATA%/Code/User/globalStorage/cline_mcp_settings.json` | `cline` | [Cline MCP](https://docs.cline.bot/mcp/configuring-mcp-servers) |
+| **Roo** | VS Code extension | JSON | `~/Library/Application Support/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json` | `%APPDATA%/Code/User/globalStorage/rooveterinaryinc.roo-cline/settings/mcp_settings.json` | `roo`, `roo-cline` | [Roo MCP](https://docs.roocode.com/features/mcp/using-mcp-in-roo) |
+| **Gemini** | CLI | JSON | `~/.gemini/settings.json` | `%APPDATA%/.gemini/settings.json` | `gemini`, `gemini cli`, `google`, `gcloud` | [Gemini CLI MCP](https://google-gemini.github.io/gemini-cli/docs/tools/mcp-server.html) |
+| **GitHub Copilot** | CLI | JSON | `~/.copilot/mcp-config.json` | `%USERPROFILE%/.copilot/mcp-config.json` | `copilot`, `copilot cli`, `github`, `gh` | [Copilot CLI MCP](https://docs.github.com/en/copilot/how-tos/use-copilot-agents/use-copilot-cli) |
+| **Kilo Code** | VS Code extension | JSON | `~/Library/Application Support/Code/User/globalStorage/kilocode.kilo-code/settings/mcp_settings.json` | `%APPDATA%/Code/User/globalStorage/kilocode.kilo-code/settings/mcp_settings.json` | `kilocode`, `kilo` | [Kilo Code MCP](https://kilo.ai/docs/features/mcp/using-mcp-in-kilo-code) |
+| **Kilo Code** | CLI | JSON | `~/.kilocode/cli/global/settings/mcp_settings.json` | `%USERPROFILE%/.kilocode/cli/global/settings/mcp_settings.json` | `kilocode-cli` | [Kilo Code CLI MCP](https://kilo.ai/docs/features/mcp/using-mcp-in-cli) |
+| **Continue** | VS Code extension | JSON | `~/.continue/config.json` | `~/.continue/config.json` | `continue` | [Continue MCP](https://docs.continue.dev/customize/deep-dives/mcp) |
+
+### Fuzzy Keyword Matching
+
+You can use keywords to reference clients instead of full names:
+
+```bash
+# These all work:
+mcp-sync direct claude cursor
+mcp-sync direct anthropic cursor
+mcp-sync direct "claude code" cursor
+
+mcp-sync direct vscode codex
+mcp-sync direct "vs code" codex
+mcp-sync direct code codex
+```
 
 Run `mcp-sync list-clients` to see which clients are detected on your system, or `mcp-sync client-info <client-id>` for detailed information about specific clients.
 
@@ -185,6 +227,7 @@ mcp-sync status
 ## Configuration File Format
 
 ### MCP Server Configuration
+
 ```json
 {
   "mcpServers": {
@@ -207,13 +250,25 @@ mcp-sync status
 }
 ```
 
+### Allowed Commands
+
+If present, `allowedCommands` is synced to supported client settings (currently Claude at `~/.claude/settings.json`).
+
+```json
+{
+  "allowedCommands": ["Bash(ls:*)"]
+}
+```
+
 ## Development
 
 ### Requirements
+
 - Python 3.12+
 - uv package manager
 
 ### Setup
+
 ```bash
 git clone <repo-url>
 cd mcp-sync
@@ -222,6 +277,7 @@ uv pip install -e .
 ```
 
 ### Code Quality
+
 ```bash
 uv run ruff check .     # Linting
 uv run ruff format .    # Formatting
@@ -229,12 +285,16 @@ uv run pytest          # Tests (when available)
 ```
 
 ### Running Tests
+
 Tests require the package to be on `PYTHONPATH`. Either install it in editable mode:
+
 ```bash
 uv pip install -e .
 uv run pytest
 ```
+
 or set `PYTHONPATH` manually when invoking pytest:
+
 ```bash
 PYTHONPATH=$PWD uv run pytest
 ```
