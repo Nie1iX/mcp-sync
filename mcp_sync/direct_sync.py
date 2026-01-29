@@ -212,12 +212,8 @@ class DirectSyncEngine:
         # Read source config
         source_data = self.toml_manager.read_config(source_path, source_format)
         source_servers = source_data.get("mcpServers", {})
-        skills_present = "skills" in source_data
-        allowed_commands_present = "allowedCommands" in source_data
-        source_skills = source_data.get("skills")
-        source_allowed_commands = source_data.get("allowedCommands")
 
-        if not source_servers and not skills_present and not allowed_commands_present:
+        if not source_servers:
             return {
                 "success": False,
                 "error": f"No MCP servers found in source: {source_path}",
@@ -226,8 +222,6 @@ class DirectSyncEngine:
         # Read target config (if exists)
         target_data = self.toml_manager.read_config(target_path, target_format)
         target_servers = target_data.get("mcpServers", {})
-        target_skills = target_data.get("skills")
-        target_allowed_commands = target_data.get("allowedCommands")
 
         # Calculate changes
         servers_to_add = set(source_servers.keys()) - set(target_servers.keys())
@@ -237,11 +231,6 @@ class DirectSyncEngine:
             if name in target_servers and source_servers[name] != target_servers[name]
         }
         servers_to_remove = set(target_servers.keys()) - set(source_servers.keys())
-        skills_changed = skills_present and source_skills != target_skills
-        allowed_commands_changed = (
-            allowed_commands_present and source_allowed_commands != target_allowed_commands
-        )
-
         if dry_run:
             return {
                 "success": True,
@@ -251,13 +240,9 @@ class DirectSyncEngine:
                 "servers_to_add": sorted(servers_to_add),
                 "servers_to_update": sorted(servers_to_update),
                 "servers_to_remove": sorted(servers_to_remove),
-                "skills_changed": skills_changed,
-                "allowed_commands_changed": allowed_commands_changed,
                 "total_changes": len(servers_to_add)
                 + len(servers_to_update)
                 + len(servers_to_remove)
-                + (1 if skills_changed else 0)
-                + (1 if allowed_commands_changed else 0),
             }
 
         # Create backup of target
@@ -272,12 +257,7 @@ class DirectSyncEngine:
         new_servers.update(source_servers)
 
         # Write target config
-        new_data = dict(target_data)
-        new_data["mcpServers"] = new_servers
-        if skills_present:
-            new_data["skills"] = source_skills
-        if allowed_commands_present:
-            new_data["allowedCommands"] = source_allowed_commands
+        new_data = {"mcpServers": new_servers}
         success = self.toml_manager.write_config(
             target_path, new_data, target_format, preserve_existing=True
         )
@@ -296,13 +276,9 @@ class DirectSyncEngine:
             "servers_added": sorted(servers_to_add),
             "servers_updated": sorted(servers_to_update),
             "servers_removed": sorted(servers_to_remove),
-            "skills_changed": skills_changed,
-            "allowed_commands_changed": allowed_commands_changed,
             "total_changes": len(servers_to_add)
             + len(servers_to_update)
             + len(servers_to_remove)
-            + (1 if skills_changed else 0)
-            + (1 if allowed_commands_changed else 0),
         }
 
 
@@ -347,10 +323,6 @@ def format_sync_result(result: dict[str, Any]) -> None:
             console.print(f"\n[red]Servers to remove ({len(result['servers_to_remove'])}):[/red]")
             for name in result["servers_to_remove"]:
                 console.print(f"  - {name}")
-        if result.get("skills_changed"):
-            console.print("\n[cyan]Skills would be updated[/cyan]")
-        if result.get("allowed_commands_changed"):
-            console.print("\n[cyan]Allowed commands would be updated[/cyan]")
 
     else:
         console.print(
@@ -382,7 +354,3 @@ def format_sync_result(result: dict[str, Any]) -> None:
 
             if result.get("servers_removed"):
                 console.print(f"  [red]- Removed {len(result['servers_removed'])} server(s)[/red]")
-            if result.get("skills_changed"):
-                console.print("  [cyan]~ Updated skills[/cyan]")
-            if result.get("allowed_commands_changed"):
-                console.print("  [cyan]~ Updated allowed commands[/cyan]")
